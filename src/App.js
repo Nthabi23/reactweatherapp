@@ -1,4 +1,3 @@
-
 import './App.css';
 import  Weather from "./Weather";
 
@@ -8,11 +7,9 @@ import  Weather from "./Weather";
       <div className="container">
         <Weather defaultCity="Pretoria" />
         <footer>
-          This project was coded by Nthabiseng Monageng and is <a href="https://github.com/Nthabi23/reactweatherapp" target="_blank" rel="noreferrer">open-source on Github</a> and <a href="">hosted on Netlify.</a>
+          This project was coded by Nthabiseng Monageng and is <a href="https://github.com/Nthabi23/reactweatherapp" target="_blank" rel="noreferrer">open-source on Github</a> and <p href="">hosted on Netlify.</p>
         </footer>
       </div>
     </div>
   );
 }
-
-
