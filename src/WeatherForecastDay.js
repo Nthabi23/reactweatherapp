@@ -1,38 +1,49 @@
-import React from "react";
-import WeatherIcon from "./WeatherIcon";
+import React, {useState, useEffect} from "react";
+import axios from "axios";
+import WeatherDay from "./WeatherDay";
+import "./WeatherForecast.css"
 
 export default function WeatherForecastDay(props) {
-  function maxTemperature() {
-    let temperature = Math.round(props.data.temp.max);
-    return `${temperature}°`;
-  }
+  let [loaded, setLoaded]= useState(false);
+  let [forecast, setForecast] =useState(null);
 
-  function minTemperature() {
-    let temperature = Math.round(props.data.temp.min);
-    return `${temperature}°`;
-  }
+useEffect(()=> {
+  setLoaded(false);
+},[props.lat, props.lon]);
 
-  function day() {
-    let date = new Date(props.data.dt * 1000);
-    let day = date.getDay();
+function handleResponse(response) {
+  setForecast(response.data.daily);
+  setLoaded(true);
+}
 
-    let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+if (loaded) {
+ return(
+  <div className="WeatherForecastDay">
+    <div className="row">
+      {forecast.map(function (dailyForecast, index) {
+        if (index < 6) {
+          return(
+            <div className="col-daily-forecast" key={index}>
+              <WeatherDay
+              icon={dailyForecast.condition.icon_url}
+              desc={dailyForecast.condition.descriptio}
+              maxTemp={dailyForecast.temperature.maximum}
+              minTemp={dailyForecast.temperature.minimum}
+              daytime={dailyForecast.time} />
+            </div>
 
-    return days[day];
-  }
-
-  return (
-    <div>
-      <div className="WeatherForecast-day">{day()}</div>
-      <WeatherIcon code={props.data.weather[0].icon} size={36} />
-      <div className="WeatherForecast-temperatures">
-        <span className="WeatherForecast-temperature-max">
-          {maxTemperature()}
-        </span>
-        <span className="WeatherForecast-temperature-min">
-          {minTemperature()}
-        </span>
-      </div>
+          );
+        }else return null;
+      })}
     </div>
-  );
+  </div>
+ ); 
+} else {
+  const apiKey ="bd5b44461863eddaa6ced0a67989e0a";
+  const latitude = props.lat;
+  const longitude = props.lon;
+  const apiUrl = `https://api.shecodes.io/weather/v1/forecast?lon=${longitude}&lat=${latitude}&key=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(handleResponse);
+  return null;
+}
 }
